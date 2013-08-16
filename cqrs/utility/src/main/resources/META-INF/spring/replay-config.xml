@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:axon="http://www.axonframework.org/schema/core"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd">
+
+    <!-- Define an event bus -->
+    <axon:event-bus id="eventBus" />
+
+    <!-- Enable annotation support to automatically register @EventHandler annotated beans -->
+    <axon:annotation-config/>
+    
+    <axon:filesystem-event-store id="eventStore" base-dir="events">
+        <!--
+        <axon:upcasters>
+            <bean class="cqrs.upcast.CompanyCreatedUpcaster" />
+            <bean class="cqrs.upcast.ComputerCreatedUpcaster" />
+        </axon:upcasters>
+        -->
+    </axon:filesystem-event-store>
+
+    <!--
+    <axon:cluster id="cluster" default="true">
+        <axon:replay-config incoming-messages="backlog" event-store="eventStore" />
+    </axon:cluster>
+    -->
+
+    <!-- We need a thread pool to execute the replay asynchronously-->
+    <bean id="asyncExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean">
+        <property name="corePoolSize" value="1"/>
+        <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+    </bean>
+
+    <!-- Added -->
+    
+    <context:annotation-config/>
+        
+    <axon:command-bus id="commandBus" />    
+        
+    <axon:event-sourcing-repository id="companyRepository" aggregate-type="cqrs.domain.Company"
+                                    event-bus="eventBus" event-store="eventStore" />
+    <axon:event-sourcing-repository id="computerRepository" aggregate-type="cqrs.domain.Computer"
+                                    event-bus="eventBus" event-store="eventStore" />
+    
+    <bean id="projectionsEntityManager" class="cqrs.replay.ProjectionsEntityManager" />
+    <bean class="cqrs.projections.CompanyProjection"/>
+    <bean class="cqrs.projections.ComputerProjection"/>
+</beans>

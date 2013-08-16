@@ -1,0 +1,28 @@
+@(commandForm: Form[_], commandClass: Class[_], fields: Array[String], saveAction: play.api.mvc.Call)
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) }
+
+@main {
+
+    <h1>@Messages("command."+commandClass.getSimpleName()+".title")</h1>
+
+
+    @form(saveAction) {
+
+        @for(name <- fields) {
+            @* Use commandClass.getDeclaredField(name).XXX for additional stuff *@
+            <fieldset>
+                @inputText(commandForm(name), '_label -> Messages("command." + commandClass.getSimpleName() + ".field." + name))
+            </fieldset>
+        }
+
+        <div class="actions">
+            <input type="submit" value="Save" class="btn primary"> or
+            <a href="@Application.GO_HOME" class="btn">Cancel</a>
+        </div>
+        
+    }
+    
+}

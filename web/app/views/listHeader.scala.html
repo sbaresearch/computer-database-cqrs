@@ -1,0 +1,9 @@
+@(key:String, title:String, listRoute: (Int, String, String, String) => Call, currentSortBy: String, currentOrder: String, currentFilter: String)
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+
+<th class="@key.replace(".","_") header @if(currentSortBy == key) @{if(currentOrder == "asc") "headerSortDown" else "headerSortUp"}">
+<a href="@listLink(listRoute, 0, currentSortBy, currentOrder, currentFilter, key)">@title</a>
+</th>

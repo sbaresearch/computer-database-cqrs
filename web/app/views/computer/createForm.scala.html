@@ -1,0 +1,38 @@
+@(computerForm: Form[cqrs.commands.CreateComputerCommand])
+
+@import repositories.CrudRepositoryHelper
+@import cqrs.readmodels.CompanyDetails
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main {
+    
+    <h1>Add a computer</h1>
+    
+    @form(routes.ComputerController.save()) {
+        
+        <fieldset>
+        
+            @inputText(computerForm("name"), '_label -> "Computer name")
+            @inputText(computerForm("introduced"), '_label -> "Introduced date")
+            @inputText(computerForm("discontinued"), '_label -> "Discontinued date")
+
+            @select(
+                computerForm("companyId"),
+                options(CrudRepositoryHelper.options(classOf[CompanyDetails])),
+                '_label -> "Company", '_default -> "-- Choose a company --",
+                '_showConstraints -> false
+            )
+            
+
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Create this computer" class="btn primary"> or 
+            <a href="@routes.ComputerController.list()" class="btn">Cancel</a>
+        </div>
+        
+    }
+    
+}

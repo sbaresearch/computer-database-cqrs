@@ -1,0 +1,31 @@
+@(id: java.util.UUID, companyForm: Form[cqrs.commands.UpdateCompanyCommand])
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main {
+    
+    <h1>Edit company</h1>
+
+    <div id="actions">
+    @form(routes.CompanyController.delete(id), 'class -> "topRight") {
+        <input type="submit" value="Delete this company" class="btn danger">
+        }
+    </div>
+    
+    @form(routes.CompanyController.update(id)) {
+        
+        <fieldset>
+        
+            @inputText(companyForm("name"), '_label -> "Company name")
+        
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Save this company" class="btn primary"> or
+            <a href="@routes.CompanyController.list()" class="btn">Cancel</a>
+        </div>
+        
+    }
+}

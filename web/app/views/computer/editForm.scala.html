@@ -1,0 +1,42 @@
+@(id: java.util.UUID, computerForm: Form[cqrs.commands.UpdateComputerCommand])
+
+@import cqrs.readmodels.CompanyDetails
+@import repositories.CrudRepositoryHelper
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main {
+    
+    <h1>Edit computer</h1>
+
+    <div id="actions">
+    @form(routes.ComputerController.delete(id), 'class -> "topRight") {
+        <input type="submit" value="Delete this computer" class="btn danger">
+        }
+    </div>
+    
+    @form(routes.ComputerController.update(id)) {
+        
+        <fieldset>
+        
+            @inputText(computerForm("name"), '_label -> "Computer name")
+            @inputText(computerForm("introduced"), '_label -> "Introduced date")
+            @inputText(computerForm("discontinued"), '_label -> "Discontinued date")
+            
+            @select(
+                computerForm("companyId"),
+                options(CrudRepositoryHelper.options(classOf[CompanyDetails])),
+                '_label -> "Company", '_default -> "-- Choose a company --",
+                '_showConstraints -> false
+            )
+        
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Save this computer" class="btn primary"> or 
+            <a href="@routes.ComputerController.list()" class="btn">Cancel</a>
+        </div>
+        
+    }
+}

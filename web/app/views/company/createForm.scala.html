@@ -1,0 +1,26 @@
+@(companyForm: Form[cqrs.commands.CreateCompanyCommand])
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main {
+    
+    <h1>Add a company</h1>
+    
+    @form(routes.CompanyController.save()) {
+        
+        <fieldset>
+        
+            @inputText(companyForm("name"), '_label -> "Company name")
+
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Create this company" class="btn primary"> or
+            <a href="@routes.CompanyController.list()" class="btn">Cancel</a>
+        </div>
+        
+    }
+    
+}

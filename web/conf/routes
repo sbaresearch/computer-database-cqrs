@@ -1,0 +1,31 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Default path will just redirect to the computer list
+GET         /                            controllers.Application.index()
+
+# Companies
+GET         /companies                   controllers.CompanyController.list(p:Int ?= 0, s:String ?= "name", o:String ?= "asc", f:String ?= "")
+GET         /companies/new               controllers.CompanyController.create()
+POST        /companies                   controllers.CompanyController.save()
+GET         /companies/:id               controllers.CompanyController.edit(id:java.util.UUID)
+POST        /companies/:id               controllers.CompanyController.update(id:java.util.UUID)
+POST        /companies/:id/delete        controllers.CompanyController.delete(id:java.util.UUID)
+
+# Computers
+GET         /computers                   controllers.ComputerController.list(p:Int ?= 0, s:String ?= "name", o:String ?= "asc", f:String ?= "")
+GET         /computers/new               controllers.ComputerController.create()
+POST        /computers                   controllers.ComputerController.save()
+GET         /computers/:id               controllers.ComputerController.edit(id:java.util.UUID)
+POST        /computers/:id               controllers.ComputerController.update(id:java.util.UUID)
+POST        /computers/:id/delete        controllers.ComputerController.delete(id:java.util.UUID)
+
+# Map static resources from the /public folder to the /assets URL path
+GET         /assets/*file                controllers.Assets.at(path="/public", file)
+
+GET         /setup/data                  controllers.SetupController.createTestData()
+
+GET         /test/success                controllers.TestController.testSuccess()
+GET         /test/error                  controllers.TestController.testError()
+

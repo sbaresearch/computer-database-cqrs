@@ -1,0 +1,26 @@
+@(listRoute: (Int, String, String, String) => Call, newPage:Int, currentSortBy: String, currentOrder: String, currentFilter: String, newSortBy: String)
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+
+@{
+    var sortBy = currentSortBy
+    var order = currentOrder
+
+    if(newSortBy != null) {
+        sortBy = newSortBy
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+
+    listRoute(newPage, sortBy, order, currentFilter)
+}
+

@@ -1,0 +1,46 @@
+@(content: Html)
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Computers database</title>
+        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/main.css")"> 
+    </head>
+    <body>
+
+        <header>
+            <div class="topbar" data-scrollspy="scrollspy" >
+                <div class="topbar-inner">
+                    <div class="container-fluid">
+                        <span class="brand">AxonPlay Sample</span>
+                        <ul class="nav">
+                            <li><a href="@routes.CompanyController.list()">Companies</a></li>
+                            <li><a href="@routes.ComputerController.list()">Computers</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section id="main">
+
+            <div>
+            @if(flash.containsKey("success")) {
+                <div class="alert-message warning">
+                    <strong>Done!</strong> @flash.get("success")
+                </div>
+            }
+            @if(flash.containsKey("error")) {
+                <div class="alert-message error">
+                    <strong>Error:</strong> @flash.get("error")
+                </div>
+            }
+            </div>
+            <div style="clear: both;" />
+
+            @content
+        </section>
+
+    </body>
+</html>

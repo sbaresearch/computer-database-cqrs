@@ -1,0 +1,73 @@
+<beans xmlns="http://www.springframework.org/schema/beans"       
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"       
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:axon="http://www.axonframework.org/schema/core"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core-2.0.xsd
+                           http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.5.xsd">
+    
+    <!-- TODO: split, imports -->
+    <!-- context:component-scan base-package="cqrs" / -->
+
+    <context:annotation-config/>
+
+    <axon:annotation-config />
+
+    <context:component-scan base-package="cqrs.commandhandlers" />
+    
+    <axon:command-bus id="commandBus" /> <!-- transaction-manager="transactionManager" -->
+
+    <bean class="cqrs.projections.CompanyProjection"/>
+    <bean class="cqrs.projections.ComputerProjection"/>
+
+    <bean class="cqrs.readmodels.CompanyDetails"/>
+    <bean class="cqrs.readmodels.ComputerDetails"/>
+
+    <bean id="projectionsEntityManager" class="infrastructure.ProjectionsEntityManager" />
+
+    <axon:event-bus id="eventBus"/>   
+    
+    <!-- axon:snapshotter id="snapshotter" event-store="eventStore" executor="taskExecutor"/ -->
+
+    <axon:event-sourcing-repository id="companyRepository" 
+                                    aggregate-type="cqrs.domain.Company"
+                                    event-bus="eventBus" 
+                                    event-store="eventStore">
+        <!-- axon:snapshotter-trigger event-count-threshold="1" snapshotter-ref="snapshotter" / -->
+    </axon:event-sourcing-repository>
+    <axon:event-sourcing-repository id="computerRepository" 
+                                    aggregate-type="cqrs.domain.Computer"
+                                    event-bus="eventBus" 
+                                    event-store="eventStore">
+        <!-- axon:snapshotter-trigger event-count-threshold="1" snapshotter-ref="snapshotter" / -->
+    </axon:event-sourcing-repository>
+    
+    <axon:aggregate-command-handler id="companyCommandHandler" 
+                                    aggregate-type="cqrs.domain.Company"
+                                    repository="companyRepository"              
+                                    command-bus="commandBus"/>
+    <axon:aggregate-command-handler id="computerCommandHandler" 
+                                    aggregate-type="cqrs.domain.Computer"
+                                    repository="computerRepository"              
+                                    command-bus="commandBus"/>
+    -->
+    
+    <axon:filesystem-event-store id="eventStore" base-dir="events"/>
+
+    <jee:jndi-lookup id="dataSource" jndi-name="DefaultDS" />
+    
+    <bean class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">        
+        <property name="commandBus" ref="commandBus"/>    
+    </bean>
+
+    <!--
+    <bean id="taskExecutor"
+          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="2"/>
+        <property name="maxPoolSize" value="5"/>
+        <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+    </bean>
+    -->
+</beans>

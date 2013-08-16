@@ -1,0 +1,55 @@
+@(currentPage: models.Page[cqrs.readmodels.CompanyDetails], currentSortBy: String, currentOrder: String, currentFilter: String)
+
+@link(newPage:Int, newSortBy:String) = @{ listLink(routes.CompanyController.list, newPage, currentSortBy, currentOrder, currentFilter, newSortBy) }
+@header(key: String, title: String) = @{ listHeader(key, title, routes.CompanyController.list, currentSortBy, currentOrder, currentFilter) }
+
+@main {
+    
+    <h1 id="homeTitle">@Messages("companies.list.title", currentPage.getTotalRowCount)</h1>
+
+    <div id="actions">
+        
+        <form action="@link(0, "name")" method="GET">
+            <input type="search" id="searchbox" name="f" value="@currentFilter" placeholder="Filter by company name...">
+            <input type="submit" id="searchsubmit" value="Filter by name" class="btn primary">
+        </form>
+
+        <p class="btn-toolbar" id="buttonbar">
+            <a class="btn primary" id="add" href="@routes.CompanyController.create()">Add a new company</a>
+            <a class="btn success" id="testSuccess" href="@routes.TestController.testSuccess()">Test Success</a>
+            <a class="btn error" id="testError" href="@routes.TestController.testError()">Test Error</a>
+        </p>
+        
+    </div>
+    
+    @if(currentPage.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>Nothing to display</em>
+        </div>
+        
+    } else {
+        
+        <table class="computers zebra-striped">
+            <thead>
+                <tr>
+                    @header("name", "Company name")
+                </tr>
+            </thead>
+            <tbody>
+
+                @for(company <- currentPage.getList) {
+                    <tr>
+                        <td><a href="@routes.CompanyController.edit(company.id)">@company.name</a></td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+        @pagination(routes.CompanyController.list, currentPage, currentSortBy, currentOrder, currentFilter)
+    }
+        
+}
+
+            

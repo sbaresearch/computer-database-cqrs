@@ -1,0 +1,14 @@
+# Messages
+
+computers.list.title={0,choice,0#No computers|1#One computer|1<{0,number,integer} computers} found
+companies.list.title={0,choice,0#No companies|1#One company|1<{0,number,integer} companies} found
+
+command.CreateCompanyCommand.title=Create a company
+command.CreateCompanyCommand.success=Company has been created
+command.CreateCompanyCommand.field.name=Name
+
+command.UpdateCompanyCommand.title=Edit company
+command.UpdateCompanyCommand.success=Company has been updated
+command.UpdateCompanyCommand.field.name=Name
+
+command.DeleteCompanyCommand.success=Company has been deleted
